@@ -25,7 +25,7 @@ class Pokedex extends React.Component{
     */
    constructor(props){
     super(props)
-    this.state = {Pokemon_data: {}, number_of_pokemons: 900, number_per_batch: 50, matched_keys:[], searching: false, percent_loaded: 0};
+    this.state = {Pokemon_data: {}, number_of_pokemons: 900, number_per_batch: 10, matched_keys:[], searching: false, percent_loaded: 0};
    }
 
    componentDidMount(){
@@ -62,7 +62,7 @@ class Pokedex extends React.Component{
             this.setState({searching: false})
         }
         else{
-            let search_string = event.target.value
+            let search_string = event.target.value.toLowerCase()
             console.log('key pressed' + event.target.value)
             let total_keys = Object.keys(this.state.Pokemon_data)
             let match_bool = total_keys.map((key) => key.includes(search_string)) // returns an array of bools about whether it has the substring we are looking for

@@ -27,7 +27,7 @@
 } */
 
 .pokemon > img{
-    max-width: 250px;
+    max-width: 200px;
     min-width: 100px;
     height: auto;
     /* border-style: solid solid solid solid; */
