@@ -1,7 +1,10 @@
 .container{
     display: flex;
+    /* display: none;
+    visibility: hidden; */
     flex-direction: row;
-    padding: 10%;
+    padding: 0%;
+    margin: 5%;
     flex-wrap: wrap;
     justify-content: center;
     /* align-items: center; */
@@ -9,11 +12,12 @@
 
 .pokemon{
     /* width: 20%; */
-    display: flex;
-    flex-direction: column;
+    display: inline-block;
+    /* flex-direction: column; */
     /* margin: 0.5%; */
-    margin-bottom: 5%;
-    align-items: center;
+    margin: 3%;
+    /* align-items: center; */
+    text-align: center;
     /* border-style: solid solid solid solid; */
 }
 
@@ -23,6 +27,27 @@
 } */
 
 .pokemon > img{
-    max-width: 70%;
+    max-width: 250px;
+    min-width: 100px;
     height: auto;
+    /* border-style: solid solid solid solid; */
+}
+
+.inputContainer{
+    display: flex;
+    flex-direction: column;
+    /* justify-content: center; */
+    margin-top: 10%;
+    margin-bottom: 5%;
+    align-items: center;
+}
+
+#inputBox{
+    width: min(60vw, 600px);
+    height: min(10vw, 100px);
+    font-size: 1.3em;
+    border-style: none none solid none;
+    border-width: 0.05rem;
+    border-color: black;
+    text-align: center
 }
