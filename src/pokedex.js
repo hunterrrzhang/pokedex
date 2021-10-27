@@ -9,7 +9,16 @@ class Pokemon extends React.Component{
             <div className="pokemon">
                 <h1>{this.props.info.name}</h1>
                 {/* <img src={this.props.info.sprites.other["official-artwork"].front_default} alt="Pokemon Image"/> */}
-                <img src={this.props.info.sprites.other.home.front_default} alt="Pokemon Image"/>
+                {
+                    // check if this image available, if null then use alternative image file
+                    this.props.info.sprites.other.home.front_default? 
+                        <img src={this.props.info.sprites.other.home.front_default} alt="Pokemon Image"/>
+                    :
+                        this.props.info.sprites.other["official-artwork"].front_default?
+                            <img src={this.props.info.sprites.other["official-artwork"].front_default} alt="Pokemon Image2"/>
+                        :
+                            <img src={this.props.info.sprites.front_default} alt="Pokemon Image2"/>
+                }
                 <p>Weight: {this.props.info.weight} |  Height {this.props.info.height}</p>
                 <p></p>
             </div>
@@ -28,23 +37,68 @@ class Pokedex extends React.Component{
     this.state = {Pokemon_data: {}, number_of_pokemons: 900, number_per_batch: 10, matched_keys:[], searching: false, percent_loaded: 0};
    }
 
-   componentDidMount(){
-    let Pokedex = require('pokedex-promise-v2');
-    let P = new Pokedex();
-    for(let i=1;i<=this.state.number_of_pokemons;i++){
-        P.getPokemonByName(i, (response, error) => { // with callback
-            if(!error) {
-              let name = response.name
-              this.setState((prevState) =>({
-                  Pokemon_data: {...prevState.Pokemon_data, [name]: response}
-                  ,percent_loaded: Math.round((Object.keys(this.state.Pokemon_data).length/898)*100)
-                //   ,matched_keys: Object.keys(this.state.Pokemon_data)
-                }))
-            //   console.log(response); 
-            } else {
-              console.log(error);
+   getPokemonDataUsingPackage(){
+        let Pokedex = require('pokedex-promise-v2');
+        let P = new Pokedex();
+        for(let i=1;i<=this.state.number_of_pokemons;i++){
+            P.getPokemonByName(i, (response, error) => { // with callback
+                if(!error) {
+                let name = response.name
+                this.setState((prevState) =>({
+                    Pokemon_data: {...prevState.Pokemon_data, [name]: response}
+                    ,percent_loaded: Math.round((Object.keys(this.state.Pokemon_data).length/898)*100)
+                    //   ,matched_keys: Object.keys(this.state.Pokemon_data)
+                    }))
+                //   console.log(response); 
+                } else {
+                console.log(error);
+                }
+            });
+        }
+    }
+
+    fetchPokemonDataUsingAxios(url){
+        const axios = require('axios')
+        axios.get(url)
+        .then(batch_response => {
+            // handle success
+            console.log(batch_response.data.results);
+            let pokemon_data_batch = batch_response.data.results
+            for(let i=0; i<pokemon_data_batch.length;i++){
+                axios.get(pokemon_data_batch[i].url)
+                    .then(response => {
+                        response = response.data
+                        console.log(response)
+                        let name = response.name
+                        this.setState((prevState) =>({
+                            Pokemon_data: {...prevState.Pokemon_data, [name]: response}
+                            ,percent_loaded: Math.round((Object.keys(this.state.Pokemon_data).length/batch_response.data.count)*100)
+                          //   ,matched_keys: Object.keys(this.state.Pokemon_data)
+                          }))
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
             }
-          });
+            if(batch_response.data.next){
+                this.fetchPokemonDataUsingAxios(batch_response.data.next)
+            }
+        })
+        .catch(error => {
+            // handle error
+            console.log(error);
+        })
+    }
+
+   componentDidMount(){
+    //    this.getPokemonDataUsingPackage()
+        this.fetchPokemonDataUsingAxios('https://pokeapi.co/api/v2/pokemon?offset=0&limit=100')
+
+
+    //    fetch("https://pokeapi.co/api/v2/pokemon?offset=100&limit=100")
+    //    .then(response => {return response.json()})
+    //    .then(data => console.log(data))
+    //    .catch(err => {console.log("Error: " + err)})
     }
     // var interval = {
     //     limit: 10,
@@ -54,7 +108,6 @@ class Pokedex extends React.Component{
     //     console.log("list of pokemon:")
     //     console.log(response);
     // })
-   }
 
 
    handleKeyPress(event){
