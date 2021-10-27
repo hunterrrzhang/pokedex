@@ -4,11 +4,9 @@ import './pokedex.css'
 class Pokemon extends React.Component{
 
     render(){
-        // console.log("this pokemon's info:")
         return(
             <div className="pokemon">
                 <h1>{this.props.info.name}</h1>
-                {/* <img src={this.props.info.sprites.other["official-artwork"].front_default} alt="Pokemon Image"/> */}
                 {
                     // check if this image available, if null then use alternative image file
                     this.props.info.sprites.other.home.front_default? 
@@ -47,9 +45,7 @@ class Pokedex extends React.Component{
                 this.setState((prevState) =>({
                     Pokemon_data: {...prevState.Pokemon_data, [name]: response}
                     ,percent_loaded: Math.round((Object.keys(this.state.Pokemon_data).length/898)*100)
-                    //   ,matched_keys: Object.keys(this.state.Pokemon_data)
                     }))
-                //   console.log(response); 
                 } else {
                 console.log(error);
                 }
@@ -93,21 +89,7 @@ class Pokedex extends React.Component{
    componentDidMount(){
     //    this.getPokemonDataUsingPackage()
         this.fetchPokemonDataUsingAxios('https://pokeapi.co/api/v2/pokemon?offset=0&limit=100')
-
-
-    //    fetch("https://pokeapi.co/api/v2/pokemon?offset=100&limit=100")
-    //    .then(response => {return response.json()})
-    //    .then(data => console.log(data))
-    //    .catch(err => {console.log("Error: " + err)})
     }
-    // var interval = {
-    //     limit: 10,
-    //     offset: 34
-    //   }
-    // P.getPokemonsList(interval, (response) => {
-    //     console.log("list of pokemon:")
-    //     console.log(response);
-    // })
 
 
    handleKeyPress(event){
@@ -132,12 +114,9 @@ class Pokedex extends React.Component{
    render(){
        console.log("Searching: ")
        console.log(this.state.searching)
-
        console.log(Object.keys(this.state.Pokemon_data).length)
 
        return (
-        //    <div></div>
-        //    <div>{this.state.Pokemon_data['1'].height}</div> && this.state.number_of_pokemons == Object.keys(this.state.Pokemon_data).length
         <div>
             <div className='inputContainer'>
                 <input className='inputArea' id='inputBox' placeholder="Find ur Pokemon" onChange={(event) => this.handleKeyPress(event)}></input>
@@ -146,7 +125,6 @@ class Pokedex extends React.Component{
                     <p>loading Pokemons... {this.state.percent_loaded}% has arrived</p>
                 }
             </div>
-            {/* visibility='hidden' display='none' */}
             <div className='container'> 
                 {
                     Object.keys(this.state.Pokemon_data).length >= this.state.number_per_batch &&
@@ -167,9 +145,3 @@ class Pokedex extends React.Component{
 }
 
 export default Pokedex
-
-// {Object.keys(this.state.Pokemon_data).length == this.state.number_of_pokemons && //must wait until each pokemon's information has been fetched from the API
-// Object.keys(this.state.Pokemon_data).map((pokemon_name) =>
-//     <Pokemon info={this.state.Pokemon_data[pokemon_name]} ></Pokemon>
-// )
-// }
